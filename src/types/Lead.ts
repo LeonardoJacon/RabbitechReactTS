@@ -13,7 +13,7 @@ export interface LeadUser {
     nome: string;
     email: string;
     telefone: string;
-    origem: typeof LEAD_ORIGINS[keyof typeof LEAD_ORIGINS];
+    origem: typeof LEAD_ORIGINS[keyof typeof LEAD_ORIGINS][];
     status?: typeof LEAD_STATUS[keyof typeof LEAD_STATUS][];
     criadoEm: string;
 }

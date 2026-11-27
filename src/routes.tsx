@@ -1,5 +1,6 @@
 import {createBrowserRouter} from 'react-router';
 import {Listar} from './pages/Listagem';
+import {Cadastrar} from './pages/Cadastro';
 
 export const router = createBrowserRouter([
   {
@@ -8,6 +9,6 @@ export const router = createBrowserRouter([
   },
   {
     path: '/leads/criar',
-    element: <h1>Criar Leads a ser implementado</h1>
+    element: <Cadastrar />
   }
 ]);
