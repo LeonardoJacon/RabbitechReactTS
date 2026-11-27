@@ -8,7 +8,7 @@ export const LEAD_ORIGINS = {
     INDICACAO: 'Indicação',
     EVENTO: 'Evento'
 } as const;
-export interface LeadUser {
+export interface Lead {
     id: string;
     nome: string;
     email: string;
@@ -16,6 +16,9 @@ export interface LeadUser {
     origem: typeof LEAD_ORIGINS[keyof typeof LEAD_ORIGINS];
     status: typeof LEAD_STATUS[keyof typeof LEAD_STATUS];
     criadoEm: string;
+}
+export interface LeadUser{
+    data:Lead;
 }
 export interface ErroApi {
     error:
@@ -26,41 +29,40 @@ export interface ErroApi {
 export interface LeadPage {
     data:
     {
-    items: LeadUser[];
+    items: Lead[];
     page: number;
     limit: number;
     total: number;
     totalPages: number;
     }
 }
+async function request<T>(url: string, options?:RequestInit): Promise<T>{
+    let response: Response;
+    try{
+        response = await fetch (url,options);
+    } catch{
+        throw new Error ("Não foi possível acessar o servidor.")
+    }
+    if (!response.ok){
+        const errorBody = await response.json().catch(() => ({error:{code: String(response.status), message: response.statusText || "Erro desconhecido."}}));
+        throw new Error (errorBody?.error?.message || 'Erro desconhecido.')
+    }
+    return response.json();
+}
 export async function listLeads(page: number = 1, limit: number = 10): Promise<LeadPage['data']> {
     const params = new URLSearchParams({ page: page.toString(), limit: limit.toString() });
-    const response = await fetch(`http://localhost:3001/leads?${params.toString()}`, );
-    if (!response.ok) {
-        const errorData: ErroApi = await response.json().catch(() => 
-        ({error:{code: String(response.status),
-        message: response.statusText || 'Erro desconhecido'}
-    }
-));
-        throw new Error(errorData.error?.message || 'Erro desconhecido');
-    }
-    const Data: LeadPage = await response.json();
-    return Data.data;
+    const response = await request<LeadPage>(`http://localhost:3001/leads?${params.toString()}`)
+    const data: LeadPage = await response ;
+    return data.data;
 }
-export async function createLead(lead: Omit<LeadUser, 'id' | 'criadoEm'>): Promise<LeadUser> {
-const response = await fetch('http://localhost:3001/leads', {
+export async function createLead(payload: Omit<Lead, 'id' | 'criadoEm'>) : Promise<LeadUser['data']> {
+const response = await request<LeadUser>('http://localhost:3001/leads', {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json',
     },
-    body: JSON.stringify(lead),
-    });
-    if (!response.ok){
-        const errorData: ErroApi = await response.json().catch(() =>
-        ({error:{code: String(response.status),
-        message: response.statusText || 'Erro desconhecido'}}));
-        throw new Error(errorData.error?.message || 'Erro desconhecido');
-    }
-    const createdLead: LeadUser = await response.json();
-    return createdLead;
+    body: JSON.stringify(payload),
+    })
+    const createdLead: LeadUser = await response;
+    return createdLead.data;
 }

@@ -1,4 +1,4 @@
-    import type {LeadUser} from '../types/Lead';
+    import type {Lead} from '../types/Lead';
     import {LEAD_ORIGINS, LEAD_STATUS, createLead} from '../types/Lead';
     import { useState } from 'react';
     import { useNavigate } from 'react-router'
@@ -39,9 +39,9 @@
     };
     export function Cadastrar() {
         const navigate = useNavigate();
-        type LeadOrigin = LeadUser['origem']; // Tipo para a origem do lead
-        type LeadStatus = LeadUser['status']; // Tipo para o status do lead
-        type LeadForm = Omit<LeadUser, 'id' | 'criadoEm' | 'status' | 'origem'> & {
+        type LeadOrigin = Lead['origem']; // Tipo para a origem do lead
+        type LeadStatus = Lead['status']; // Tipo para o status do lead
+        type LeadForm = Omit<Lead, 'id' | 'criadoEm' | 'status' | 'origem'> & {
             origem: LeadOrigin | '';
             status: LeadStatus | '';
         }; // Tipo para o formulário de lead 
@@ -76,14 +76,6 @@
     ];
         const handleSubmit = async (e: React.FormEvent) => {
             e.preventDefault();
-            if (!form.origem|| !form.status) {
-                alert('Por favor, preencha todos os campos.');
-                return;
-            }
-            if (Object.values(errors).some((error) => error)) {
-                alert('Por favor, corrija os erros no formulário antes de enviar.');
-                return;
-            }
             const novosErros: Partial<Record<CampoTexto, string >> = {
                 nome: validations.nome(form.nome),
                 email: validations.email(form.email),
@@ -94,6 +86,10 @@
             setTouched({nome: true, email: true, telefone: true});
             if (Object.values(novosErros).some((error) => error)){
                 alert('Corrija os erros antes de enviar.');
+                return;
+            }
+            if (!form.origem || !form.status){
+                alert('Preencha os campos.')
                 return;
             }
             try{

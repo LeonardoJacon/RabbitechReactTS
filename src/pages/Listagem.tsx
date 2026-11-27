@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { listLeads } from '../types/Lead';
 import {useNavigate} from 'react-router';
-import type {LeadUser} from '../types/Lead';
+import type {Lead} from '../types/Lead';
 
 export function Listar() {
-  const [leads, setLeads] = useState<LeadUser[]>([]);
+  const [leads, setLeads] = useState<Lead[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [carregando, setCarregando] = useState(true);
@@ -60,8 +60,8 @@ const handleNextPage = (newPage: number) => {
                   <td>{lead.nome}</td>
                   <td>{lead.email}</td>
                   <td>{lead.telefone}</td>
-                  <td>{String(lead.origem)}</td>
-                  <td>{lead.status ? String(lead.status) : '-'}</td>
+                  <td>{lead.origem}</td>
+                  <td>{lead.status}</td>
                   <td>{new Date(lead.criadoEm).toLocaleDateString('pt-BR')}</td>
                 </tr>
               ))}
