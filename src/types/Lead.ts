@@ -14,7 +14,7 @@ export interface LeadUser {
     email: string;
     telefone: string;
     origem: typeof LEAD_ORIGINS[keyof typeof LEAD_ORIGINS];
-    status: typeof LEAD_STATUS[keyof typeof LEAD_STATUS][];
+    status?: typeof LEAD_STATUS[keyof typeof LEAD_STATUS][];
     criadoEm: string;
 }
 export interface ErroApi {
@@ -46,4 +46,21 @@ export async function listLeads(page: number = 1, limit: number = 10): Promise<L
     }
     const Data: LeadPage = await response.json();
     return Data.data;
+}
+export async function createLead(lead: Omit<LeadUser, 'id' | 'criadoEm'>): Promise<LeadUser> {
+const response = await fetch('http://localhost:3001/leads', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(lead),
+    });
+    if (!response.ok){
+        const errorData: ErroApi = await response.json().catch(() =>
+        ({error:{code: String(response.status),
+        message: response.statusText || 'Erro desconhecido'}}));
+        throw new Error(errorData.error?.message || 'Erro desconhecido');
+    }
+    const createdLead: LeadUser = await response.json();
+    return createdLead;
 }
