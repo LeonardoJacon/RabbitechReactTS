@@ -21,5 +21,18 @@
     "oxlint": "^1.90.0",
     "typescript": "~7.0.2",
     "vite": "^8.3.6"
-  }
+  },
+  "description": "This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LeonardoJacon/RabbitechReactTS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LeonardoJacon/RabbitechReactTS/issues"
+  },
+  "homepage": "https://github.com/LeonardoJacon/RabbitechReactTS#readme"
 }
