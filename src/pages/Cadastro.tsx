@@ -60,7 +60,7 @@
             const formattedValue = field === 'telefone' ? telefoneformat(value) : value
             setForm((prev) => ({...prev, [field]: formattedValue}));
             if (touched[field as keyof typeof touched]) {
-                const error = validations[field as CampoTexto]?.(value);
+                const error = validations[field as CampoTexto]?.(formattedValue);
                 setErrors((prev) => ({ ...prev, [field]: error }));
             }
         };
